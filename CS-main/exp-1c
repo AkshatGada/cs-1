@@ -1,0 +1,49 @@
+N = 1000;
+for i=1:2:N
+
+m = 0; sgma=1;
+[X1(i),X1(i+1)] = gngauss(m,sgma);
+[X2(i),X2(i+1)] = gngauss(m,sgma);
+
+echo off;
+
+echo on;
+A = [1 -0.9];
+B = 1;
+Xc = filter(B,A,X1);
+Xs = filter(B,A,X2);
+fc = 1000/pi;
+end
+
+for i=1:N
+    band_pass_process(i) = Xc(i)*cos(2*pi*fc*i)-Xs(i)*sin(2*pi*fc*i);
+    
+    echo off;
+end
+
+echo on;
+M = 50;
+bpp_autocorr = Rx_est(band_pass_process,M)
+bpp_spectrum = fftshift(abs(fft(bpp_autocorr)))
+
+plot(linspace(-0.5,0.5,51),bpp_spectrum)
+
+function[Rx] = Rx_est(X,M)
+
+N = 1000;
+Rx = zeros(1,M+1);
+for m=1:M+1
+    for n=1:N-m+1
+        Rx(m) = Rx(m) + X(n)*X(n+m-1);
+    end
+    Rx(m) = Rx(m)/(N-m+1);
+end
+end
+
+function[gsrv1, gsrv2] = gngauss(m,sgma)
+u = rand;
+z = sgma*(sqrt(2*log(1/(1-u))));
+u = rand;
+gsrv1 = m + z*cos(2*pi*u);
+gsrv2 = m + z*sin(2*pi*u);
+end

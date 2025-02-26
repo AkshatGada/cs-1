@@ -1,0 +1,94 @@
+% Define input parameters
+N = 10;         % Number of input bits
+a = floor(2 * rand(1, N));  % Generate random 1's and 0's
+
+% Define modulation parameters
+A = 5;          % Pulse amplitude
+Tb = 1;         % Bit period
+fs = 100;       % Number of samples (even number) taken in a bit period
+
+% Initialize modulation signals
+U = [];         % Unipolar NRZ
+U_rz = [];      % Unipolar RZ
+P = [];         % Polar NRZ
+P_rz = [];      % Polar RZ
+B = [];         % Bipolar NRZ
+B_rz = [];      % Bipolar RZ / RZ-AMI
+M = [];         % Split-phase or Manchester code
+
+% Generate modulation signals
+for k = 1:N
+    % Unipolar NRZ
+    U = [U A * a(k) * ones(1, fs)];
+    
+    % Unipolar RZ
+    p = [ones(1, fs/2), zeros(1, fs/2)];
+    U_rz = [U_rz A * a(k) * p];
+    
+    % Polar NRZ
+    P = [P ((-1)^(a(k) + 1)) * A * ones(1, fs)];
+    
+    % Polar RZ
+    p = [ones(1, fs/2), zeros(1, fs/2)];
+    P_rz = [P_rz ((-1)^(a(k) + 1)) * A * p];
+    
+    % Bipolar NRZ
+    if a(k) == 1
+        B = [B (-1)^k * A * ones(1, fs)];
+    else
+        B = [B A * a(k) * ones(1, fs)];
+    end
+    
+    % Bipolar RZ / RZ-AMI
+    if a(k) == 1
+        p = [ones(1, fs/2), zeros(1, fs/2)];
+        B_rz = [B_rz (-1)^k * A * p];
+    else
+        B_rz = [B_rz A * a(k) * ones(1, fs)];
+    end
+    
+    % Split-phase or Manchester code
+    p = [ones(1, fs/2), -1 * ones(1, fs/2)];
+    M = [M ((-1)^(a(k) + 1)) * A * p];
+end
+
+% Time vector
+T = linspace(0, N * Tb, length(U));
+
+% Plotting
+figure(1)
+subplot(4, 1, 1); plot(T, U, 'LineWidth', 2)
+axis([0 N*Tb -6 6])
+title('Unipolar NRZ')
+grid on
+
+subplot(4, 1, 2); plot(T, U_rz, 'LineWidth', 2)
+axis([0 N*Tb -6 6])
+title('Unipolar RZ')
+grid on
+
+subplot(4, 1, 3); plot(T, P, 'LineWidth', 2)
+axis([0 N*Tb -6 6])
+title('Polar NRZ')
+grid on
+
+subplot(4, 1, 4); plot(T, P_rz, 'LineWidth', 2)
+axis([0 N*Tb -6 6])
+title('Polar RZ')
+grid on
+
+figure(2)
+subplot(3, 1, 1); plot(T, B, 'LineWidth', 2)
+axis([0 N*Tb -6 6])
+title('Bipolar NRZ')
+grid on
+
+subplot(3, 1, 2); plot(T, B_rz, 'LineWidth', 2)
+axis([0 N*Tb -6 6])
+title('Bipolar RZ / RZ-AMI')
+grid on
+
+subplot(3, 1, 3); plot(T, M, 'LineWidth', 2)
+axis([0 N*Tb -6 6])
+title('Split-phase or Manchester code')
+grid on

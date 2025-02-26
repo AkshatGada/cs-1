@@ -1,0 +1,1 @@
+"./main.obj" "./c6416dskinit.obj" "./Vectors_intr.obj" "../C6416dsk.cmd" -l"libc.a" -l"C:\dsk6416\lib\dsk6416bsl.lib" -l"C:\dsk6416\lib\csl6416.lib" 

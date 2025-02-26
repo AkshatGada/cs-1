@@ -1,0 +1,14 @@
+// bsl1800int.cof
+// this file was generated automatically using function dsk_sos_iir67int.m
+
+#define NUM_SECTIONS 3
+
+int b[NUM_SECTIONS][3] = { 
+{19765, -13784, 19765},
+{19765, 361, 19765},
+{31714, -11136, 31714} };
+
+int a[NUM_SECTIONS][2] = { 
+{-35077, 27634},
+{17837, 26830},
+{-5832, 450} };
