@@ -4,7 +4,6 @@ a = floor(2 * rand(1, N));  % Generate random 1's and 0's
 
 % Define modulation parameters
 A = 5;          % Pulse amplitude
-Tb = 1;         % Bit period
 fs = 100;       % Number of samples (even number) taken in a bit period
 
 % Initialize modulation signals
@@ -20,14 +19,15 @@ M = [];         % Split-phase or Manchester code
 for k = 1:N
     % Unipolar NRZ
     U = [U A * a(k) * ones(1, fs)];
-    
+
     % Unipolar RZ
     p = [ones(1, fs/2), zeros(1, fs/2)];
     U_rz = [U_rz A * a(k) * p];
     
+
     % Polar NRZ
     P = [P ((-1)^(a(k) + 1)) * A * ones(1, fs)];
-    
+
     % Polar RZ
     p = [ones(1, fs/2), zeros(1, fs/2)];
     P_rz = [P_rz ((-1)^(a(k) + 1)) * A * p];
@@ -53,7 +53,8 @@ for k = 1:N
 end
 
 % Time vector
-T = linspace(0, N * Tb, length(U));
+T = linspace(0, N , length(U));
+t = linspace(0,N,length(U));
 
 % Plotting
 figure(1)
@@ -63,6 +64,14 @@ axis([0 N*Tb -6 6])
 title('Unipolar NRZ')
 grid on
 
+figure(1)
+subplot(4,1,1);
+plot(T,U,'LineWidth',2)
+axis([0 N -6 6])
+title('Unipolar NRZ')
+
+subplot(4,1,2);
+plot(T,U_rz,'LineWidth',2)
 subplot(4, 1, 2); 
 plot(T, U_rz, 'LineWidth', 2)
 axis([0 N*Tb -6 6])
